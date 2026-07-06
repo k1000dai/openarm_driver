@@ -21,6 +21,8 @@ arm = openarm_driver.SingleArmDriver("right_arm")
 # You can also use your own config file as well.
 # config = openarm_driver.Config("/path/to/config.yaml")
 # arm = openarm_driver.SingleArmDriver("right_arm", config)
+# Bundled configs can be selected by short name, e.g. openarm_cell_higher_pd.yaml:
+# config = openarm_driver.Config("higher_pd")
 
 try:
     arm.start()

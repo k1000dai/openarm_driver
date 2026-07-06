@@ -37,12 +37,16 @@ class Config:
             return path
 
         if path.parent == Path("."):
-            resource = importlib.resources.files(__package__).joinpath(
-                "configs",
+            configs = importlib.resources.files(__package__).joinpath("configs")
+            candidates = (
                 path.name,
+                f"{path.name}.yaml",
+                f"openarm_cell_{path.name}.yaml",
             )
-            if resource.is_file():
-                return resource
+            for candidate in candidates:
+                resource = configs.joinpath(candidate)
+                if resource.is_file():
+                    return resource
         return path
 
     def __init__(self, config_path: str | Path | None = None):
@@ -50,8 +54,10 @@ class Config:
 
         Args:
             config_path: Path to config YAML file. If None, uses the bundled
-                configs/openarm_cell.yaml. Bare file names are resolved from
-                the bundled configs directory.
+                configs/openarm_cell.yaml. Bare names are resolved from the
+                bundled configs directory, trying "<name>", "<name>.yaml",
+                then "openarm_cell_<name>.yaml", so "higher_pd" selects
+                configs/openarm_cell_higher_pd.yaml.
 
         """
         config_resource = self._resolve_config(config_path)
